@@ -5,10 +5,57 @@ jQuery(document).ready(function() {
 });
 
 jQuery(document).ready(function() {
+	jQuery("a.read-setting-toolbar").click(function(){
+		jQuery(".read-setting").toggleClass('show');
+	});
+	jQuery("a.white").click(function(){
+		jQuery("body").removeClass();
+		jQuery("body").addClass('white');
+	});
+	jQuery("a.green").click(function(){
+		jQuery("body").removeClass();
+		jQuery("body").addClass('green');
+	});
+	jQuery("a.yellow").click(function(){
+		jQuery("body").removeClass();
+		jQuery("body").addClass('yellow');
+	});
+	jQuery("a.blue").click(function(){
+		jQuery("body").removeClass();
+		jQuery("body").addClass('blue');
+	});
 	jQuery("a.night").click(function(){
-		jQuery("body").toggleClass('night');
+		//jQuery("body").toggleClass('night');
+		jQuery("body").removeClass();
+		jQuery("body").addClass('night');
 	});
 });
+
+jQuery(document).ready(function() {
+	fade();
+});
+function fade() {
+	checkShow();
+	jQuery(window).on('scroll', function(){//监听滚动事件
+		checkShow();
+	})
+}
+function isShow($el){
+	var winH = jQuery(window).height(),//获取窗口高度
+		scrollH = jQuery(window).scrollTop(),//获取窗口滚动高度
+		top = $el.offset().top;//获取元素距离窗口顶部偏移高度
+	if(top < scrollH + winH ){
+		return true;//在可视范围
+	}else{
+		return false;//不在可视范围
+	}
+}
+function checkShow() {
+	jQuery(".fade").each(function(){
+		if(jQuery(this).hasClass("show")){return;}
+		if(isShow(jQuery(this))){jQuery(this).addClass("show");}
+	});
+}
 
 jQuery.fn.postLike = function() {
     if (jQuery(this).hasClass('done')) {
@@ -35,7 +82,7 @@ jQuery(document).on("click", ".favorite",function() {
 });
 
 jQuery(document).ready(function($) {
-$(document).pjax('a[target!=_blank][pjax!="no"][rel!="nofollow"]', '#main-container', {fragment:'#main-container', timeout:6000});    
+$(document).pjax('a[target!=_blank][pjax!="no"][rel!="nofollow"]', '#container', {fragment:'#container', timeout:6000});    
 	$(document).on('pjax:send', function() {
 		//$('#main-container').fadeTo(700,0.0);
 		jQuery('body,html').animate({scrollTop: 0},100);
@@ -44,9 +91,9 @@ $(document).pjax('a[target!=_blank][pjax!="no"][rel!="nofollow"]', '#main-contai
 	$(document).on('pjax:complete', function() {
 		//$('#main-container').fadeTo(700,1);
 		$("#loading").css('display','none'); 
+		fade();
 		var width = jQuery(".post-gallery img").width();
 		jQuery(".post-gallery img").height(width);
-		jQuery(".gallery-item a").attr('data-fancybox','gallery');
 		jQuery('[data-fancybox="gallery"]').fancybox();
 		jQuery(function() {
       		jQuery(".post-gallery img, div.lazy").lazyload({effect: "fadeIn"});
